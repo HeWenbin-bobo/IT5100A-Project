@@ -31,7 +31,7 @@ object Emp
         def job = column[String]("job")
         def salary = column[Int]("salary")
         def department_id = column[Int]("department_id")
-        def department_id_fk = foreignKey("Dprt_ID_FK", department_id, department)(_.department_id, onUpdate=ForeignKeyAction.Cascade)
+        def department_id_fk = foreignKey("Dprt_ID_FK", department_id, department)(_.department_id, onUpdate=ForeignKeyAction.Cascade,onDelete=ForeignKeyAction.Cascade)
 
         def * = (employee_name, age, job, salary, department_id, employee_id).mapTo[EmpInfo]
 
@@ -50,8 +50,8 @@ object Emp
         def per_report = column[String]("per_report")
         //def pk = primaryKey("pk_per", (report_id)) 
         
-        def employee_id_fk = foreignKey("Emp_ID_FK", employee_id, employee)(_.employee_id, onUpdate=ForeignKeyAction.Cascade) 
-        def department_id_fk = foreignKey("Dprt_ID_FK2", department_id, department)(_.department_id, onUpdate=ForeignKeyAction.Cascade)
+        def employee_id_fk = foreignKey("Emp_ID_FK", employee_id, employee)(_.employee_id, onUpdate=ForeignKeyAction.Cascade,onDelete=ForeignKeyAction.Cascade) 
+        def department_id_fk = foreignKey("Dprt_ID_FK2", department_id, department)(_.department_id, onUpdate=ForeignKeyAction.Cascade,onDelete=ForeignKeyAction.Cascade)
 
         def * = (employee_id, department_id,per_rating, per_report,report_id).mapTo[EmpPer]
 

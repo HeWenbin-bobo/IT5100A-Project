@@ -89,7 +89,14 @@ class EmpDaoImpl extends EmpDao {
 	}
 
     override def delete_employee(employee_id: Int) : or[Error,Int] = {
-		val temp: DBIO[Int] = emp_performance.filter(_.employee_id === employee_id).delete
+		val temp: DBIO[Int] = employee.filter(_.employee_id === employee_id).delete
+		DBUtil.exec(temp) match {
+			case Left(e) => Left(new Error("delete_employee " + e.getMessage))
+			//case Right(result) => Left(new Error("delete_employee Failed"))
+			case Right(result) => Right(result)
+		}
+		// Second realization
+		/* val temp: DBIO[Int] = emp_performance.filter(_.employee_id === employee_id).delete
 		DBUtil.exec(temp) match {
 			case Left(e) => Left(new Error("delete_employee " + e.getMessage))
 			//case Right(result) => Left(new Error("delete_employee Failed"))
@@ -97,7 +104,17 @@ class EmpDaoImpl extends EmpDao {
 				case Left(e) => Left(new Error("delete_employee " + e.getMessage))
 				case Right(result) => Right(result)
 			} 
+		} */
+
+		// Third realization
+		/* Await.result(db.run(sqlu"""SET FOREIGN_KEY_CHECKS = 0"""), 2.seconds)
+		val res = Await.result(db.run(employee.filter(_.employee_id === employee_id).delete), 2.seconds)
+		if (res == 0){
+			println("The employee Id you entered is wrong!")
+		}else{
+			println("successfully delete!")
 		}
+		Await.result(db.run(sqlu"""SET FOREIGN_KEY_CHECKS = 1"""), 2.seconds) */
 	}
 
 	override def emp_avg_score(employee_id : Int) : or[Error,Double] = {
