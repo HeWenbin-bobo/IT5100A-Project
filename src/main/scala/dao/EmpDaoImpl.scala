@@ -89,10 +89,14 @@ class EmpDaoImpl extends EmpDao {
 	}
 
     override def delete_employee(employee_id: Int) : or[Error,Int] = {
-		val temp: DBIO[Int] = employee.filter(_.employee_id === employee_id).delete
+		val temp: DBIO[Int] = emp_performance.filter(_.employee_id === employee_id).delete
 		DBUtil.exec(temp) match {
 			case Left(e) => Left(new Error("delete_employee " + e.getMessage))
-			case Right(result) => Right(result)
+			//case Right(result) => Left(new Error("delete_employee Failed"))
+			case Right(result) => DBUtil.exec(employee.filter(_.employee_id === employee_id).delete) match {
+				case Left(e) => Left(new Error("delete_employee " + e.getMessage))
+				case Right(result) => Right(result)
+			} 
 		}
 	}
 
