@@ -4,7 +4,7 @@ import slick.jdbc.MySQLProfile.api._ // related functions to support the connect
 import scala.concurrent.ExecutionContext.Implicits.global // support andThen
 
 // Define table structure
-object Emp
+object DB_define
 {    
     case class DepartmentInfo(department_id: Int, department_name: String, location_id: Int)
     class Department_table(tag: Tag) extends Table[DepartmentInfo](tag, "department")

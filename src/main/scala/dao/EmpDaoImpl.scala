@@ -3,7 +3,7 @@ package dao
 import slick.jdbc.MySQLProfile.api._ // related functions to support the connection with mysql
 import scala.concurrent.ExecutionContext.Implicits.global // support andThen
 import or._
-import pojo.Emp._
+import pojo.DB_define._
 import util.DBUtil
 
 /**

@@ -6,7 +6,7 @@ import cats.effect.{IO, IOApp}
 import scala.util.{Try}
 import cats.effect.unsafe.implicits._
 import dao.{EmpDao, EmpDaoImpl}
-import pojo.Emp._
+import pojo.DB_define._
 import or._
 import util.DBUtil
 
