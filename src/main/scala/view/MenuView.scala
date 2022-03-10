@@ -21,6 +21,17 @@ object MenuView extends IOApp.Simple {
 
 	def toInt(s: String): Try[Int] = Try(Integer.parseInt(s.trim)) //auxiliary function
 
+	def printResult[T](results:List[T]) : IO[Unit] = {
+		for {
+			_ <- IO {results.foreach(result => result match {
+						case (department_id, average_score) => println("%8d         %.2f".format(department_id, average_score))
+						case (department_id, employee_id, employee_name, score) => println("%8d %12d %15s %8d".format(department_id, employee_id, employee_name, score))
+						case _ => println(result)
+					})
+				}
+		} yield()
+	}
+
 	def systemWelcome() : IO[Unit] = {
 		for {
 			_ <- IO(println("*************************************"))
@@ -112,7 +123,7 @@ object MenuView extends IOApp.Simple {
         	employee_id <- IO.readLine
 			_ <- dao.find_employee_by_id(employee_id.toInt) match {
 				case Left(e) => IO.println(e.getMessage)
-				case Right(result) => if (result.length > 0) IO.println(result.toList) else IO.println("Did not exist!")
+				case Right(result) => if (result.length > 0) printResult(result.toList) else IO.println("Did not exist!")
 			}
 		} yield ()
 	}
@@ -123,7 +134,7 @@ object MenuView extends IOApp.Simple {
         	employee_id <- IO.readLine
 			_ <- dao.get_department_info_by_employee_id(employee_id.toInt) match {
 				case Left(e) => IO.println(e.getMessage)
-				case Right(result) => if (result.length > 0) IO.println(result.toList) else IO.println("Did not exist!")
+				case Right(result) => if (result.length > 0) printResult(result.toList) else IO.println("Did not exist!")
 			}
 		} yield ()
 	}
@@ -132,7 +143,7 @@ object MenuView extends IOApp.Simple {
 		for {
 			_ <- dao.show_employee_table() match {
 				case Left(e) => IO.println(e.getMessage)
-				case Right(result) => if (result.length > 0) IO.println(result.toList) else IO.println("Empty database!")
+				case Right(result) => if (result.length > 0) printResult(result.toList) else IO.println("Empty database!")
 			}
 		} yield ()
 	}
@@ -141,7 +152,7 @@ object MenuView extends IOApp.Simple {
 		for {
 			_ <- dao.show_department_table() match {
 				case Left(e) => IO.println(e.getMessage)
-				case Right(result) => if (result.length > 0) IO.println(result.toList) else IO.println("Empty database!")
+				case Right(result) => if (result.length > 0) printResult(result.toList) else IO.println("Empty database!")
 			}
 		} yield ()
 	}
@@ -150,7 +161,7 @@ object MenuView extends IOApp.Simple {
 		for {
 			_ <- dao.show_performance_table() match {
 				case Left(e) => IO.println(e.getMessage)
-				case Right(result) => if (result.length > 0) IO.println(result.toList) else IO.println("Empty database!")
+				case Right(result) => if (result.length > 0) printResult(result.toList) else IO.println("Empty database!")
 			}
 		} yield ()
 	}
@@ -190,7 +201,7 @@ object MenuView extends IOApp.Simple {
 			employee_id <- IO.println("Please enter Id of employee:") >> IO.readLine
 			_ <- dao.emp_avg_score(employee_id.toInt) match {
 				case Left(e) => IO.println(e.getMessage)
-				case Right(result) => IO.println(result)
+				case Right(result) => IO.println(s"The average score is ${result}")
 			}
 		} yield ()
 	}
@@ -199,7 +210,7 @@ object MenuView extends IOApp.Simple {
 		for {
 			_ <- dao.deprt_avg_score() match {
 				case Left(e) => IO.println(e.getMessage)
-				case Right(result) => if (result.length > 0) IO.println(result.toList) else IO.println("Empty database!")
+				case Right(result) => if (result.length > 0) printResult(result.toList) else IO.println("Empty database!")
 			}
 		} yield ()
 	}
@@ -208,7 +219,7 @@ object MenuView extends IOApp.Simple {
 		for {
 			_ <- dao.find_best_perform_employee() match {
 				case Left(e) => IO.println(e.getMessage)
-				case Right(result) => if (result.length > 0) IO.println(result.toList) else IO.println("Empty database!")
+				case Right(result) => if (result.length > 0) printResult(result.toList) else IO.println("Empty database!")
 			}
 		} yield ()
 	}
